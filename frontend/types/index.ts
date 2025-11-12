@@ -95,6 +95,60 @@ export interface AffiliateProgram {
   updated_at: string;
 }
 
+export enum EnrollmentStatus {
+  PENDING = "pending",
+  ACTIVE = "active",
+  PAUSED = "paused",
+  TERMINATED = "terminated",
+}
+
+export enum ReferralLinkStatus {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+}
+
+export interface ProgramEnrollment {
+  id: string;
+  affiliate_id: string;
+  program_id: string;
+  status: EnrollmentStatus;
+  custom_commission_config?: Record<string, any>;
+  enrolled_at: string;
+  terminated_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ReferralLink {
+  id: string;
+  enrollment_id: string;
+  affiliate_id: string;
+  program_id: string;
+  link_code: string;
+  target_url: string;
+  utm_params?: Record<string, string>;
+  metadata?: Record<string, any>;
+  clicks_count: number;
+  conversions_count: number;
+  status: ReferralLinkStatus;
+  expires_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ReferralLinkWithUrl extends ReferralLink {
+  full_url: string;
+}
+
+export interface ReferralLinkStats {
+  link_code: string;
+  total_clicks: number;
+  unique_visitors: number;
+  conversions: number;
+  conversion_rate: number;
+  last_click_at?: string;
+}
+
 export interface ApiError {
   detail: string;
 }
