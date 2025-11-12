@@ -13,6 +13,14 @@ import {
   ReferralLink,
   ReferralLinkWithUrl,
   ReferralLinkStats,
+  Conversion,
+  ConversionStatus,
+  Commission,
+  CommissionStatus,
+  CommissionStats,
+  Payout,
+  PayoutStatus,
+  PayoutStats,
 } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -249,6 +257,86 @@ class ApiClient {
 
   async getReferralLinkStats(id: string): Promise<ReferralLinkStats> {
     const response = await this.client.get<ReferralLinkStats>(`/referrals/links/${id}/stats`);
+    return response.data;
+  }
+
+  // Phase 3: Conversion endpoints
+  async listConversions(params?: { skip?: number; limit?: number; status?: ConversionStatus }): Promise<Conversion[]> {
+    const response = await this.client.get<Conversion[]>("/conversions", { params });
+    return response.data;
+  }
+
+  async getConversion(id: string): Promise<Conversion> {
+    const response = await this.client.get<Conversion>(`/conversions/${id}`);
+    return response.data;
+  }
+
+  async validateConversion(id: string): Promise<Conversion> {
+    const response = await this.client.post<Conversion>(`/conversions/${id}/validate`);
+    return response.data;
+  }
+
+  async rejectConversion(id: string): Promise<Conversion> {
+    const response = await this.client.post<Conversion>(`/conversions/${id}/reject`);
+    return response.data;
+  }
+
+  // Phase 3: Commission endpoints
+  async listCommissions(params?: { skip?: number; limit?: number; status?: CommissionStatus }): Promise<Commission[]> {
+    const response = await this.client.get<Commission[]>("/commissions", { params });
+    return response.data;
+  }
+
+  async getCommission(id: string): Promise<Commission> {
+    const response = await this.client.get<Commission>(`/commissions/${id}`);
+    return response.data;
+  }
+
+  async getCommissionStats(): Promise<CommissionStats> {
+    const response = await this.client.get<CommissionStats>("/commissions/stats");
+    return response.data;
+  }
+
+  async approveCommission(id: string): Promise<Commission> {
+    const response = await this.client.post<Commission>(`/commissions/${id}/approve`);
+    return response.data;
+  }
+
+  async rejectCommission(id: string): Promise<Commission> {
+    const response = await this.client.post<Commission>(`/commissions/${id}/reject`);
+    return response.data;
+  }
+
+  // Phase 3: Payout endpoints
+  async generatePayout(data: { affiliate_id: string; start_date: string; end_date: string }): Promise<Payout> {
+    const response = await this.client.post<Payout>("/payouts", data);
+    return response.data;
+  }
+
+  async listPayouts(params?: { skip?: number; limit?: number; status?: PayoutStatus }): Promise<Payout[]> {
+    const response = await this.client.get<Payout[]>("/payouts", { params });
+    return response.data;
+  }
+
+  async getPayout(id: string): Promise<Payout> {
+    const response = await this.client.get<Payout>(`/payouts/${id}`);
+    return response.data;
+  }
+
+  async getPayoutStats(): Promise<PayoutStats> {
+    const response = await this.client.get<PayoutStats>("/payouts/stats");
+    return response.data;
+  }
+
+  async processPayout(id: string, paymentReference: string): Promise<Payout> {
+    const response = await this.client.post<Payout>(`/payouts/${id}/process`, null, {
+      params: { payment_reference: paymentReference }
+    });
+    return response.data;
+  }
+
+  async cancelPayout(id: string): Promise<Payout> {
+    const response = await this.client.post<Payout>(`/payouts/${id}/cancel`);
     return response.data;
   }
 

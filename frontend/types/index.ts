@@ -152,3 +152,101 @@ export interface ReferralLinkStats {
 export interface ApiError {
   detail: string;
 }
+
+// Phase 3: Commission System Types
+
+export enum ConversionType {
+  SIGNUP = "signup",
+  TRIAL_START = "trial_start",
+  SUBSCRIPTION = "subscription",
+  PURCHASE = "purchase",
+  LEAD = "lead",
+}
+
+export enum ConversionStatus {
+  PENDING = "pending",
+  VALIDATED = "validated",
+  REJECTED = "rejected",
+}
+
+export enum CommissionStatus {
+  PENDING = "pending",
+  APPROVED = "approved",
+  REJECTED = "rejected",
+  PAID = "paid",
+}
+
+export enum PayoutStatus {
+  PENDING = "pending",
+  PROCESSING = "processing",
+  PAID = "paid",
+  CANCELLED = "cancelled",
+}
+
+export interface Conversion {
+  id: string;
+  referral_link_id: string;
+  affiliate_id: string;
+  program_id: string;
+  conversion_type: ConversionType;
+  status: ConversionStatus;
+  conversion_value: number;
+  visitor_session_id: string;
+  customer_id?: string;
+  metadata?: Record<string, any>;
+  validated_at?: string;
+  rejected_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Commission {
+  id: string;
+  conversion_id: string;
+  affiliate_id: string;
+  program_id: string;
+  tier_id?: string;
+  base_amount: number;
+  tier_multiplier: number;
+  final_amount: number;
+  status: CommissionStatus;
+  approved_by?: string;
+  approved_at?: string;
+  payout_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Payout {
+  id: string;
+  affiliate_id: string;
+  total_amount: number;
+  commissions_count: number;
+  status: PayoutStatus;
+  start_date: string;
+  end_date: string;
+  payment_method?: string;
+  payment_reference?: string;
+  processed_at?: string;
+  metadata?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CommissionStats {
+  total_pending: number;
+  total_approved: number;
+  total_paid: number;
+  count_pending: number;
+  count_approved: number;
+  count_paid: number;
+}
+
+export interface PayoutStats {
+  total_pending: number;
+  total_processing: number;
+  total_paid: number;
+  count_pending: number;
+  count_processing: number;
+  count_paid: number;
+}

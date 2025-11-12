@@ -7,6 +7,16 @@ from app.schemas.affiliate import AffiliateProfile, AffiliateProfileCreate, Affi
 from app.schemas.program import AffiliateProgram, AffiliateProgramCreate, AffiliateProgramUpdate
 from app.schemas.enrollment import ProgramEnrollment, ProgramEnrollmentCreate, ProgramEnrollmentUpdate
 from app.schemas.referral import ReferralLink, ReferralLinkCreate, ReferralLinkUpdate, ReferralLinkWithUrl
+from app.schemas.conversion import (
+    Conversion,
+    ConversionCreate,
+    ConversionUpdate,
+    Commission,
+    CommissionUpdate,
+    Payout,
+    PayoutCreate,
+    PayoutUpdate,
+)
 
 __all__ = [
     "User",
@@ -30,4 +40,12 @@ __all__ = [
     "ReferralLinkCreate",
     "ReferralLinkUpdate",
     "ReferralLinkWithUrl",
+    "Conversion",
+    "ConversionCreate",
+    "ConversionUpdate",
+    "Commission",
+    "CommissionUpdate",
+    "Payout",
+    "PayoutCreate",
+    "PayoutUpdate",
 ]
