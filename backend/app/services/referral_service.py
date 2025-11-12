@@ -39,7 +39,7 @@ def create_referral_link(
     enrollment: ProgramEnrollment,
     target_url: str,
     utm_params: Optional[dict] = None,
-    metadata: Optional[dict] = None,
+    link_metadata: Optional[dict] = None,
     expires_at: Optional[str] = None,
 ) -> ReferralLink:
     """
@@ -54,7 +54,7 @@ def create_referral_link(
         link_code=link_code,
         target_url=target_url,
         utm_params=utm_params or {},
-        metadata=metadata or {},
+        link_metadata=link_metadata or {},
         expires_at=expires_at,
     )
 

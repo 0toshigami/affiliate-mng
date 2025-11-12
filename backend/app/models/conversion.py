@@ -46,7 +46,7 @@ class Conversion(Base):
 
     # Status and validation
     status = Column(SQLEnum(ConversionStatus), default=ConversionStatus.PENDING, nullable=False, index=True)
-    metadata = Column(JSONB, default=dict)  # Order details, lead info, custom data
+    conversion_metadata = Column(JSONB, default=dict)  # Order details, lead info, custom data
 
     # Timestamps
     converted_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)

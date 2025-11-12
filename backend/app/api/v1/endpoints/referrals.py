@@ -70,7 +70,7 @@ def generate_referral_link(
         enrollment=enrollment,
         target_url=link_data.target_url,
         utm_params=link_data.utm_params,
-        metadata=link_data.metadata,
+        link_metadata=link_data.link_metadata,
         expires_at=link_data.expires_at,
     )
 
