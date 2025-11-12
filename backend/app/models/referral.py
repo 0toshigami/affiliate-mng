@@ -29,7 +29,7 @@ class ReferralLink(Base):
     link_code = Column(String(50), unique=True, index=True, nullable=False)  # Unique tracking code
     target_url = Column(String(1000), nullable=False)  # Where to redirect
     utm_params = Column(JSONB, default=dict)  # UTM parameters for tracking
-    metadata = Column(JSONB, default=dict)  # Custom tracking data
+    link_metadata = Column(JSONB, default=dict)  # Custom tracking data
 
     # Statistics (cached for performance)
     clicks_count = Column(Integer, default=0, nullable=False)

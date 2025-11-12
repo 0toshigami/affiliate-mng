@@ -21,7 +21,7 @@ def create_conversion(
     visitor_session_id: str,
     conversion_value: Decimal = Decimal("0"),
     customer_id: Optional[str] = None,
-    metadata: Optional[dict] = None,
+    conversion_metadata: Optional[dict] = None,
     auto_validate: bool = False,
 ) -> Conversion:
     """
@@ -34,7 +34,7 @@ def create_conversion(
         visitor_session_id: Session ID from original click
         conversion_value: Monetary value of conversion
         customer_id: Optional customer/user ID
-        metadata: Additional conversion data
+        conversion_metadata: Additional conversion data
         auto_validate: Automatically validate and create commission
     """
     conversion = Conversion(
@@ -45,7 +45,7 @@ def create_conversion(
         conversion_type=conversion_type,
         visitor_session_id=visitor_session_id,
         conversion_value=conversion_value,
-        metadata=metadata or {},
+        conversion_metadata=conversion_metadata or {},
         status=ConversionStatus.VALIDATED if auto_validate else ConversionStatus.PENDING,
     )
 

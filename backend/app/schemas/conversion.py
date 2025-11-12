@@ -21,7 +21,7 @@ class ConversionBase(BaseModel):
     """Base conversion schema"""
     conversion_type: ConversionType
     conversion_value: Decimal = Field(default=Decimal("0"), ge=0)
-    metadata: Optional[Dict] = Field(default_factory=dict)
+    conversion_metadata: Optional[Dict] = Field(default_factory=dict)
 
 
 class ConversionCreate(ConversionBase):
@@ -35,7 +35,7 @@ class ConversionUpdate(BaseModel):
     """Schema for updating a conversion"""
     status: Optional[ConversionStatus] = None
     conversion_value: Optional[Decimal] = None
-    metadata: Optional[Dict] = None
+    conversion_metadata: Optional[Dict] = None
 
 
 class Conversion(ConversionBase):

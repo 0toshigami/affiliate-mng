@@ -13,7 +13,7 @@ class ReferralLinkBase(BaseModel):
     """Base referral link schema"""
     target_url: str = Field(..., max_length=1000)
     utm_params: Optional[Dict[str, str]] = Field(default_factory=dict)
-    metadata: Optional[Dict] = Field(default_factory=dict)
+    link_metadata: Optional[Dict] = Field(default_factory=dict)
     expires_at: Optional[datetime] = None
 
 
@@ -26,7 +26,7 @@ class ReferralLinkUpdate(BaseModel):
     """Schema for updating a referral link"""
     target_url: Optional[str] = Field(None, max_length=1000)
     utm_params: Optional[Dict[str, str]] = None
-    metadata: Optional[Dict] = None
+    link_metadata: Optional[Dict] = None
     status: Optional[ReferralLinkStatus] = None
     expires_at: Optional[datetime] = None
 

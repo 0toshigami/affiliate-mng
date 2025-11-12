@@ -52,7 +52,7 @@ def create_conversion(
         visitor_session_id=str(conversion_data.visitor_session_id),
         conversion_value=conversion_data.conversion_value,
         customer_id=str(conversion_data.customer_id) if conversion_data.customer_id else None,
-        metadata=conversion_data.metadata,
+        conversion_metadata=conversion_data.conversion_metadata,
         auto_validate=(current_user.role == UserRole.ADMIN),  # Auto-validate for admin
     )
 
