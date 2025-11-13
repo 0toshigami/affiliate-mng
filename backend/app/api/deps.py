@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.core.security import decode_token
 from app.core.exceptions import AuthenticationError, AuthorizationError
-from app.models.user import User, UserRole
+from app.models.user import User, UserRole, UserStatus
 from app.schemas.auth import TokenPayload
 
 # HTTP Bearer token scheme
@@ -39,7 +39,7 @@ def get_current_user(
     if not user:
         raise AuthenticationError("User not found")
 
-    if user.status != "active":
+    if user.status != UserStatus.ACTIVE:
         raise AuthenticationError("User account is not active")
 
     return user
@@ -51,7 +51,7 @@ def get_current_active_user(
     """
     Get current active user
     """
-    if current_user.status != "active":
+    if current_user.status != UserStatus.ACTIVE:
         raise AuthenticationError("User account is not active")
     return current_user
 
