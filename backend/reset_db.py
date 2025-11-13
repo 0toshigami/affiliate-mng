@@ -18,10 +18,17 @@ def reset_database():
 
         print("🔄 Connecting to database...")
         with engine.connect() as conn:
-            # Clear alembic version
+            # Clear alembic version (if exists)
             print("📋 Clearing alembic version history...")
-            conn.execute(text("DELETE FROM alembic_version"))
-            conn.commit()
+            try:
+                conn.execute(text("DELETE FROM alembic_version"))
+                conn.commit()
+                print("   ✓ Cleared alembic version")
+            except Exception as e:
+                if "does not exist" in str(e):
+                    print("   ℹ️  alembic_version table doesn't exist yet (skipping)")
+                else:
+                    raise
 
             # Drop all tables
             print("🗑️  Dropping all tables...")
