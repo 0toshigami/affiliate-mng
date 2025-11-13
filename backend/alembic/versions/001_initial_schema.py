@@ -17,51 +17,20 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # Create enum types (drop first if they exist to handle clean migrations)
-    op.execute("DROP TYPE IF EXISTS userrole CASCADE")
+    # Create enum types
+    # NOTE: Database should be clean before running this migration
+    # Use force_reset_db.py to clean the database first
     op.execute("CREATE TYPE userrole AS ENUM ('admin', 'affiliate', 'customer')")
-
-    op.execute("DROP TYPE IF EXISTS userstatus CASCADE")
     op.execute("CREATE TYPE userstatus AS ENUM ('active', 'inactive', 'suspended')")
-
-    op.execute("DROP TYPE IF EXISTS approvalstatus CASCADE")
     op.execute("CREATE TYPE approvalstatus AS ENUM ('pending', 'approved', 'rejected')")
-
-    op.execute("DROP TYPE IF EXISTS programtype CASCADE")
     op.execute("CREATE TYPE programtype AS ENUM ('saas', 'lead_gen', 'content_media')")
-
-    op.execute("DROP TYPE IF EXISTS programstatus CASCADE")
     op.execute("CREATE TYPE programstatus AS ENUM ('active', 'paused', 'archived')")
-
-    op.execute("DROP TYPE IF EXISTS enrollmentstatus CASCADE")
     op.execute("CREATE TYPE enrollmentstatus AS ENUM ('pending', 'active', 'paused', 'terminated')")
-
-    op.execute("DROP TYPE IF EXISTS referrallinkstatus CASCADE")
     op.execute("CREATE TYPE referrallinkstatus AS ENUM ('active', 'inactive')")
-
-    op.execute("DROP TYPE IF EXISTS conversiontype CASCADE")
     op.execute("CREATE TYPE conversiontype AS ENUM ('signup', 'trial_start', 'subscription', 'purchase', 'lead')")
-
-    op.execute("DROP TYPE IF EXISTS conversionstatus CASCADE")
     op.execute("CREATE TYPE conversionstatus AS ENUM ('pending', 'validated', 'rejected')")
-
-    op.execute("DROP TYPE IF EXISTS commissionstatus CASCADE")
     op.execute("CREATE TYPE commissionstatus AS ENUM ('pending', 'approved', 'rejected', 'paid')")
-
-    op.execute("DROP TYPE IF EXISTS payoutstatus CASCADE")
     op.execute("CREATE TYPE payoutstatus AS ENUM ('pending', 'processing', 'paid', 'cancelled')")
-
-    # Drop existing tables if they exist (in reverse dependency order)
-    op.execute("DROP TABLE IF EXISTS payouts CASCADE")
-    op.execute("DROP TABLE IF EXISTS commissions CASCADE")
-    op.execute("DROP TABLE IF EXISTS conversions CASCADE")
-    op.execute("DROP TABLE IF EXISTS referral_clicks CASCADE")
-    op.execute("DROP TABLE IF EXISTS referral_links CASCADE")
-    op.execute("DROP TABLE IF EXISTS program_enrollments CASCADE")
-    op.execute("DROP TABLE IF EXISTS affiliate_programs CASCADE")
-    op.execute("DROP TABLE IF EXISTS affiliate_profiles CASCADE")
-    op.execute("DROP TABLE IF EXISTS affiliate_tiers CASCADE")
-    op.execute("DROP TABLE IF EXISTS users CASCADE")
 
     # Phase 1: Users table
     op.create_table(
