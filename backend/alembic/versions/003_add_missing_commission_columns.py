@@ -23,6 +23,8 @@ def upgrade() -> None:
 
     # Add missing columns to conversions table
     op.add_column('conversions', sa.Column('currency', sa.String(3), nullable=False, server_default='USD'))
+    op.add_column('conversions', sa.Column('converted_at', sa.DateTime(timezone=True), nullable=False, server_default=sa.text('CURRENT_TIMESTAMP')))
+    op.create_index('idx_conversion_converted_at', 'conversions', ['converted_at'])
 
     # Add missing columns to affiliate_profiles table
     op.add_column('affiliate_profiles', sa.Column('payment_method', sa.Enum('BANK_TRANSFER', 'PAYPAL', 'STRIPE', name='paymentmethod'), nullable=True))
@@ -66,6 +68,8 @@ def downgrade() -> None:
     op.drop_column('affiliate_profiles', 'payment_method')
 
     # Reverse conversions changes
+    op.drop_index('idx_conversion_converted_at', 'conversions')
+    op.drop_column('conversions', 'converted_at')
     op.drop_column('conversions', 'currency')
 
     # Reverse commissions changes
