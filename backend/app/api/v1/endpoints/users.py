@@ -51,7 +51,7 @@ def update_current_user(
 
     # Hash password if provided
     if "password" in update_data:
-        update_data["password_hash"] = get_password_hash(update_data.pop("password"))
+        update_data["hashed_password"] = get_password_hash(update_data.pop("password"))
 
     for field, value in update_data.items():
         setattr(current_user, field, value)
@@ -114,7 +114,7 @@ def create_user(
     # Create new user
     db_user = User(
         email=user_data.email,
-        password_hash=get_password_hash(user_data.password),
+        hashed_password=get_password_hash(user_data.password),
         first_name=user_data.first_name,
         last_name=user_data.last_name,
         role=user_data.role,
@@ -152,7 +152,7 @@ def update_user(
 
     # Hash password if provided
     if "password" in update_data:
-        update_data["password_hash"] = get_password_hash(update_data.pop("password"))
+        update_data["hashed_password"] = get_password_hash(update_data.pop("password"))
 
     for field, value in update_data.items():
         setattr(user, field, value)

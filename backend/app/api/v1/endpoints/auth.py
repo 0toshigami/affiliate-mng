@@ -31,7 +31,7 @@ def register(
     # Create new user
     db_user = User(
         email=user_data.email,
-        password_hash=get_password_hash(user_data.password),
+        hashed_password=get_password_hash(user_data.password),
         first_name=user_data.first_name,
         last_name=user_data.last_name,
         role=user_data.role or UserRole.CUSTOMER,
@@ -56,7 +56,7 @@ def login(
     # Find user by email
     user = db.query(User).filter(User.email == login_data.email).first()
 
-    if not user or not verify_password(login_data.password, user.password_hash):
+    if not user or not verify_password(login_data.password, user.hashed_password):
         raise AuthenticationError("Incorrect email or password")
 
     if user.status != UserStatus.ACTIVE:

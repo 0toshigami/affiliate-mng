@@ -107,7 +107,7 @@ def seed_admin_user(db: Session) -> None:
     if not existing:
         admin = User(
             email=settings.FIRST_SUPERUSER_EMAIL,
-            password_hash=get_password_hash(settings.FIRST_SUPERUSER_PASSWORD),
+            hashed_password=get_password_hash(settings.FIRST_SUPERUSER_PASSWORD),
             first_name="Admin",
             last_name="User",
             role=UserRole.ADMIN,
