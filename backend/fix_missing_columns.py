@@ -140,6 +140,69 @@ def main():
         else:
             print("✅ converted_at column already exists in conversions")
 
+        # ===== FIX REFERRAL_CLICKS TABLE =====
+        print("\n=== Referral Clicks ===\n")
+
+        # Check if referrer_url column exists (or if it's still named referer)
+        result = db.execute(text("""
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'referral_clicks'
+            AND column_name = 'referrer_url'
+        """)).fetchone()
+
+        if not result:
+            # Check if old column name exists
+            old_col = db.execute(text("""
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_name = 'referral_clicks'
+                AND column_name = 'referer'
+            """)).fetchone()
+
+            if old_col:
+                print("Renaming referer to referrer_url...")
+                db.execute(text("""
+                    ALTER TABLE referral_clicks
+                    RENAME COLUMN referer TO referrer_url
+                """))
+                db.commit()
+                print("✅ Renamed referer to referrer_url")
+            else:
+                print("⚠️  Neither referer nor referrer_url column exists")
+        else:
+            print("✅ referrer_url column already exists")
+
+        # Check if geo_location column exists (or if it's still named metadata)
+        result = db.execute(text("""
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'referral_clicks'
+            AND column_name = 'geo_location'
+        """)).fetchone()
+
+        if not result:
+            # Check if old column name exists
+            old_col = db.execute(text("""
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_name = 'referral_clicks'
+                AND column_name = 'metadata'
+            """)).fetchone()
+
+            if old_col:
+                print("Renaming metadata to geo_location...")
+                db.execute(text("""
+                    ALTER TABLE referral_clicks
+                    RENAME COLUMN metadata TO geo_location
+                """))
+                db.commit()
+                print("✅ Renamed metadata to geo_location")
+            else:
+                print("⚠️  Neither metadata nor geo_location column exists")
+        else:
+            print("✅ geo_location column already exists")
+
         print("\n🎉 All columns fixed!")
 
         db.close()
