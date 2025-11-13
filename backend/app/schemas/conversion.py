@@ -64,6 +64,12 @@ class CommissionBase(BaseModel):
     pass
 
 
+class CommissionUpdate(BaseModel):
+    """Schema for updating a commission"""
+    status: Optional[CommissionStatus] = None
+    approved_by: Optional[UUID] = None
+
+
 class Commission(BaseModel):
     """Schema for commission response"""
     id: UUID
@@ -119,6 +125,14 @@ class PayoutCreate(BaseModel):
     affiliate_id: UUID
     start_date: datetime
     end_date: datetime
+
+
+class PayoutUpdate(BaseModel):
+    """Schema for updating a payout"""
+    status: Optional[PayoutStatus] = None
+    payment_method: Optional[str] = None
+    payment_reference: Optional[str] = None
+    notes: Optional[str] = None
 
 
 class PayoutProcess(BaseModel):
