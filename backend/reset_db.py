@@ -27,6 +27,7 @@ def reset_database():
             except Exception as e:
                 if "does not exist" in str(e):
                     print("   ℹ️  alembic_version table doesn't exist yet (skipping)")
+                    conn.rollback()  # Rollback the failed transaction
                 else:
                     raise
 
