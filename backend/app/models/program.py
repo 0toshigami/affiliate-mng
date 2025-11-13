@@ -13,24 +13,24 @@ from app.database import Base
 
 class ProgramType(str, enum.Enum):
     """Program type enumeration"""
-    SAAS = "saas"
-    LEAD_GEN = "lead_gen"
-    CONTENT_MEDIA = "content_media"
+    SAAS = "SAAS"
+    LEAD_GEN = "LEAD_GEN"
+    CONTENT_MEDIA = "CONTENT_MEDIA"
 
 
 class ProgramStatus(str, enum.Enum):
     """Program status enumeration"""
-    ACTIVE = "active"
-    PAUSED = "paused"
-    ARCHIVED = "archived"
+    ACTIVE = "ACTIVE"
+    PAUSED = "PAUSED"
+    ARCHIVED = "ARCHIVED"
 
 
 class EnrollmentStatus(str, enum.Enum):
     """Enrollment status enumeration"""
-    PENDING = "pending"
-    ACTIVE = "active"
-    PAUSED = "paused"
-    TERMINATED = "terminated"
+    PENDING = "PENDING"
+    ACTIVE = "ACTIVE"
+    PAUSED = "PAUSED"
+    TERMINATED = "TERMINATED"
 
 
 class AffiliateProgram(Base):

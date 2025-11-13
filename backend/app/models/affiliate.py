@@ -13,16 +13,16 @@ from app.database import Base
 
 class ApprovalStatus(str, enum.Enum):
     """Approval status enumeration"""
-    PENDING = "pending"
-    APPROVED = "approved"
-    REJECTED = "rejected"
+    PENDING = "PENDING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
 
 
 class PaymentMethod(str, enum.Enum):
     """Payment method enumeration"""
-    BANK_TRANSFER = "bank_transfer"
-    PAYPAL = "paypal"
-    STRIPE = "stripe"
+    BANK_TRANSFER = "BANK_TRANSFER"
+    PAYPAL = "PAYPAL"
+    STRIPE = "STRIPE"
 
 
 class AffiliateTier(Base):

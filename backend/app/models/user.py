@@ -13,16 +13,16 @@ from app.database import Base
 
 class UserRole(str, enum.Enum):
     """User role enumeration"""
-    ADMIN = "admin"
-    AFFILIATE = "affiliate"
-    CUSTOMER = "customer"
+    ADMIN = "ADMIN"
+    AFFILIATE = "AFFILIATE"
+    CUSTOMER = "CUSTOMER"
 
 
 class UserStatus(str, enum.Enum):
     """User status enumeration"""
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-    SUSPENDED = "suspended"
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    SUSPENDED = "SUSPENDED"
 
 
 class User(Base):

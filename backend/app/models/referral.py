@@ -13,8 +13,8 @@ from app.database import Base
 
 class ReferralLinkStatus(str, enum.Enum):
     """Referral link status enumeration"""
-    ACTIVE = "active"
-    INACTIVE = "inactive"
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
 
 
 class ReferralLink(Base):
