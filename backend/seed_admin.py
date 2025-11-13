@@ -60,8 +60,8 @@ def main():
                 "password": hashed_password,
                 "first_name": "Admin",
                 "last_name": "User",
-                "role": "admin",  # Lowercase string for enum
-                "status": "active",  # Lowercase string for enum
+                "role": "ADMIN",  # Uppercase to match current database enum
+                "status": "ACTIVE",  # Uppercase to match current database enum
                 "created_at": now,
                 "updated_at": now
             }

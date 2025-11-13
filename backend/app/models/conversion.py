@@ -13,18 +13,18 @@ from app.database import Base
 
 class ConversionType(str, enum.Enum):
     """Conversion type enumeration"""
-    SALE = "sale"
-    LEAD = "lead"
-    SIGNUP = "signup"
-    CUSTOM = "custom"
+    SALE = "SALE"
+    LEAD = "LEAD"
+    SIGNUP = "SIGNUP"
+    CUSTOM = "CUSTOM"
 
 
 class ConversionStatus(str, enum.Enum):
     """Conversion status enumeration"""
-    PENDING = "pending"
-    VALIDATED = "validated"
-    REJECTED = "rejected"
-    REVERSED = "reversed"
+    PENDING = "PENDING"
+    VALIDATED = "VALIDATED"
+    REJECTED = "REJECTED"
+    REVERSED = "REVERSED"
 
 
 class Conversion(Base):
@@ -67,10 +67,10 @@ class Conversion(Base):
 
 class CommissionStatus(str, enum.Enum):
     """Commission status enumeration"""
-    PENDING = "pending"
-    APPROVED = "approved"
-    PAID = "paid"
-    REJECTED = "rejected"
+    PENDING = "PENDING"
+    APPROVED = "APPROVED"
+    PAID = "PAID"
+    REJECTED = "REJECTED"
 
 
 class Commission(Base):
@@ -115,10 +115,10 @@ class Commission(Base):
 
 class PayoutStatus(str, enum.Enum):
     """Payout status enumeration"""
-    PENDING = "pending"
-    PROCESSING = "processing"
-    COMPLETED = "completed"
-    FAILED = "failed"
+    PENDING = "PENDING"
+    PROCESSING = "PROCESSING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
 
 
 class Payout(Base):
