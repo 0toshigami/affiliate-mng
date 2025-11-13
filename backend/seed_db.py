@@ -1,21 +1,25 @@
+#!/usr/bin/env python3
 """
-Database Seeding Script
-
-Run this script to seed the database with initial data:
-python seed_db.py
+Seed the database with initial data
 """
+import sys
 from app.database import SessionLocal
 from app.utils.seed import seed_database
 
-
 def main():
-    """Main seeding function"""
-    db = SessionLocal()
+    """Main function to seed the database"""
     try:
+        print("Starting database seeding...")
+        db = SessionLocal()
         seed_database(db)
-    finally:
         db.close()
-
+        print("\n✅ Database seeded successfully!")
+        return 0
+    except Exception as e:
+        print(f"\n❌ Error seeding database: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
