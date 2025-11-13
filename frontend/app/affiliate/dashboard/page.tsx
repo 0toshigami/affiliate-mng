@@ -9,6 +9,7 @@ import {
   CommissionStats,
   CommissionStatus,
   AffiliateProfile,
+  ReferralLinkStatus,
 } from "@/types";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -61,7 +62,7 @@ export default function AffiliateDashboard() {
       const totalClicks = links.reduce((sum, link) => sum + link.clicks_count, 0);
       const totalConversions = links.reduce((sum, link) => sum + link.conversions_count, 0);
       const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
-      const activeLinks = links.filter(link => link.status === "active").length;
+      const activeLinks = links.filter(link => link.status === ReferralLinkStatus.ACTIVE).length;
 
       const totalEarnings =
         commissionStats.total_paid +

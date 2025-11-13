@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { apiClient, getErrorMessage } from "@/lib/api";
-import { AffiliateProgram, ProgramEnrollment } from "@/types";
+import { AffiliateProgram, ProgramEnrollment, EnrollmentStatus } from "@/types";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -47,7 +47,7 @@ export default function AffiliateProgramsPage() {
 
   const isEnrolled = (programId: string) => {
     return enrollments.some(
-      (e) => e.program_id === programId && e.status === "active"
+      (e) => e.program_id === programId && e.status === EnrollmentStatus.ACTIVE
     );
   };
 
