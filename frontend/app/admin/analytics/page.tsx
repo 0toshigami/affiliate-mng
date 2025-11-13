@@ -87,8 +87,8 @@ export default function AdminAnalyticsPage() {
       ] = await Promise.all([
         apiClient.listAffiliates({ limit: 100 }),
         apiClient.listPrograms({ limit: 100 }),
-        apiClient.listCommissions({ limit: 1000 }),
-        apiClient.listConversions({ limit: 1000 }),
+        apiClient.listCommissions({ limit: 100 }),
+        apiClient.listConversions({ limit: 100 }),
         apiClient.getCommissionStats(),
         apiClient.getPayoutStats(),
       ]);
