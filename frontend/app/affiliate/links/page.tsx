@@ -7,6 +7,7 @@ import {
   ReferralLinkWithUrl,
   ProgramEnrollment,
   ReferralLinkStats,
+  EnrollmentStatus,
 } from "@/types";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -40,7 +41,7 @@ export default function ReferralLinksPage() {
         apiClient.getMyEnrollments(),
       ]);
       setLinks(linksData);
-      setEnrollments(enrollmentsData.filter((e) => e.status === "active"));
+      setEnrollments(enrollmentsData.filter((e) => e.status === EnrollmentStatus.ACTIVE));
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
