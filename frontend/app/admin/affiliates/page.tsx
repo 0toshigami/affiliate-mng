@@ -69,11 +69,11 @@ export default function AffiliatesListPage() {
 
   const getStatusBadge = (status: ApprovalStatus) => {
     const variants: Record<ApprovalStatus, "success" | "warning" | "danger"> = {
-      approved: "success",
-      pending: "warning",
-      rejected: "danger",
+      [ApprovalStatus.APPROVED]: "success",
+      [ApprovalStatus.PENDING]: "warning",
+      [ApprovalStatus.REJECTED]: "danger",
     };
-    return <Badge variant={variants[status]}>{status.toUpperCase()}</Badge>;
+    return <Badge variant={variants[status]}>{status}</Badge>;
   };
 
   if (isLoading) {
