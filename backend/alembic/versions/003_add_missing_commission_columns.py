@@ -31,6 +31,10 @@ def upgrade() -> None:
     op.add_column('affiliate_profiles', sa.Column('payment_details', postgresql.JSONB(astext_type=sa.Text()), nullable=True, server_default='{}'))
     op.add_column('affiliate_profiles', sa.Column('tax_info', postgresql.JSONB(astext_type=sa.Text()), nullable=True, server_default='{}'))
 
+    # Fix referral_clicks table columns
+    op.alter_column('referral_clicks', 'referer', new_column_name='referrer_url')
+    op.alter_column('referral_clicks', 'metadata', new_column_name='geo_location')
+
     # Fix payouts table columns
     # Rename date columns to datetime and change names
     op.alter_column('payouts', 'start_date', new_column_name='payout_period_start', type_=sa.DateTime(timezone=True))
@@ -61,6 +65,10 @@ def downgrade() -> None:
     op.alter_column('payouts', 'commission_count', new_column_name='commissions_count', type_=sa.Integer())
     op.alter_column('payouts', 'payout_period_end', new_column_name='end_date', type_=sa.Date())
     op.alter_column('payouts', 'payout_period_start', new_column_name='start_date', type_=sa.Date())
+
+    # Reverse referral_clicks changes
+    op.alter_column('referral_clicks', 'geo_location', new_column_name='metadata')
+    op.alter_column('referral_clicks', 'referrer_url', new_column_name='referer')
 
     # Reverse affiliate_profiles changes
     op.drop_column('affiliate_profiles', 'tax_info')
