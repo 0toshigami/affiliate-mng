@@ -17,20 +17,8 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # Create enum types
-    # NOTE: Database should be clean before running this migration
-    # Use force_reset_db.py to clean the database first
-    op.execute("CREATE TYPE userrole AS ENUM ('admin', 'affiliate', 'customer')")
-    op.execute("CREATE TYPE userstatus AS ENUM ('active', 'inactive', 'suspended')")
-    op.execute("CREATE TYPE approvalstatus AS ENUM ('pending', 'approved', 'rejected')")
-    op.execute("CREATE TYPE programtype AS ENUM ('saas', 'lead_gen', 'content_media')")
-    op.execute("CREATE TYPE programstatus AS ENUM ('active', 'paused', 'archived')")
-    op.execute("CREATE TYPE enrollmentstatus AS ENUM ('pending', 'active', 'paused', 'terminated')")
-    op.execute("CREATE TYPE referrallinkstatus AS ENUM ('active', 'inactive')")
-    op.execute("CREATE TYPE conversiontype AS ENUM ('signup', 'trial_start', 'subscription', 'purchase', 'lead')")
-    op.execute("CREATE TYPE conversionstatus AS ENUM ('pending', 'validated', 'rejected')")
-    op.execute("CREATE TYPE commissionstatus AS ENUM ('pending', 'approved', 'rejected', 'paid')")
-    op.execute("CREATE TYPE payoutstatus AS ENUM ('pending', 'processing', 'paid', 'cancelled')")
+    # Note: Enum types are automatically created by SQLAlchemy when using Enum columns
+    # No need to explicitly create them here
 
     # Phase 1: Users table
     op.create_table(
@@ -244,15 +232,16 @@ def downgrade() -> None:
     op.drop_table('affiliate_tiers')
     op.drop_table('users')
 
-    # Drop enum types
-    op.execute("DROP TYPE IF EXISTS payoutstatus")
-    op.execute("DROP TYPE IF EXISTS commissionstatus")
-    op.execute("DROP TYPE IF EXISTS conversionstatus")
-    op.execute("DROP TYPE IF EXISTS conversiontype")
-    op.execute("DROP TYPE IF EXISTS referrallinkstatus")
-    op.execute("DROP TYPE IF EXISTS enrollmentstatus")
-    op.execute("DROP TYPE IF EXISTS programstatus")
-    op.execute("DROP TYPE IF EXISTS programtype")
-    op.execute("DROP TYPE IF EXISTS approvalstatus")
-    op.execute("DROP TYPE IF EXISTS userstatus")
-    op.execute("DROP TYPE IF EXISTS userrole")
+    # Note: Enum types are automatically dropped by SQLAlchemy when tables are dropped
+    # But we'll explicitly drop them to ensure clean state
+    op.execute("DROP TYPE IF EXISTS payoutstatus CASCADE")
+    op.execute("DROP TYPE IF EXISTS commissionstatus CASCADE")
+    op.execute("DROP TYPE IF EXISTS conversionstatus CASCADE")
+    op.execute("DROP TYPE IF EXISTS conversiontype CASCADE")
+    op.execute("DROP TYPE IF EXISTS referrallinkstatus CASCADE")
+    op.execute("DROP TYPE IF EXISTS enrollmentstatus CASCADE")
+    op.execute("DROP TYPE IF EXISTS programstatus CASCADE")
+    op.execute("DROP TYPE IF EXISTS programtype CASCADE")
+    op.execute("DROP TYPE IF EXISTS approvalstatus CASCADE")
+    op.execute("DROP TYPE IF EXISTS userstatus CASCADE")
+    op.execute("DROP TYPE IF EXISTS userrole CASCADE")
