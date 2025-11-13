@@ -116,6 +116,30 @@ def main():
         else:
             print("✅ currency column already exists in conversions")
 
+        # Check if converted_at column exists in conversions
+        result = db.execute(text("""
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'conversions'
+            AND column_name = 'converted_at'
+        """)).fetchone()
+
+        if not result:
+            print("Adding converted_at column to conversions...")
+            db.execute(text("""
+                ALTER TABLE conversions
+                ADD COLUMN converted_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
+            """))
+            db.commit()
+            # Create index on converted_at
+            db.execute(text("""
+                CREATE INDEX IF NOT EXISTS idx_conversion_converted_at ON conversions(converted_at)
+            """))
+            db.commit()
+            print("✅ Added converted_at column to conversions")
+        else:
+            print("✅ converted_at column already exists in conversions")
+
         print("\n🎉 All columns fixed!")
 
         db.close()
