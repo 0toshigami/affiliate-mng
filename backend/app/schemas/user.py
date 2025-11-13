@@ -47,7 +47,7 @@ class User(UserBase):
 
 class UserInDB(User):
     """Schema for user in database (includes password hash)"""
-    password_hash: str
+    hashed_password: str
 
     class Config:
         from_attributes = True
