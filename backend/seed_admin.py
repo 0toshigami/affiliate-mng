@@ -52,7 +52,7 @@ def main():
         db.execute(
             text("""
                 INSERT INTO users (id, email, hashed_password, first_name, last_name, role, status, created_at, updated_at)
-                VALUES (:id::UUID, :email, :password, :first_name, :last_name, :role, :status, :created_at, :updated_at)
+                VALUES (CAST(:id AS UUID), :email, :password, :first_name, :last_name, :role, :status, :created_at, :updated_at)
             """),
             {
                 "id": admin_id,
