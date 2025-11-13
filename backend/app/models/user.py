@@ -42,7 +42,7 @@ class User(Base):
     last_login_at = Column(DateTime, nullable=True)
 
     # Relationships
-    affiliate_profile = relationship("AffiliateProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    affiliate_profile = relationship("AffiliateProfile", back_populates="user", uselist=False, cascade="all, delete-orphan", foreign_keys="[AffiliateProfile.user_id]")
 
     def __repr__(self):
         return f"<User {self.email}>"
