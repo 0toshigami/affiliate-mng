@@ -7,6 +7,7 @@ import {
   PayoutStatus,
   PayoutStats,
   AffiliateProfile,
+  ApprovalStatus,
 } from "@/types";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -51,7 +52,7 @@ export default function AdminPayoutsPage() {
 
   const fetchAffiliates = async () => {
     try {
-      const affiliatesData = await apiClient.listAffiliates({ status: "approved" });
+      const affiliatesData = await apiClient.listAffiliates({ status: ApprovalStatus.APPROVED });
       setAffiliates(affiliatesData);
     } catch (err) {
       setError(getErrorMessage(err));
