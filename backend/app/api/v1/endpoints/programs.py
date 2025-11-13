@@ -5,7 +5,7 @@ from typing import List, Optional
 from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from python_slugify import slugify
+from slugify import slugify
 
 from app.database import get_db
 from app.api.deps import get_current_active_user, get_admin_user, get_affiliate_user
