@@ -1,4 +1,4 @@
-"""Add missing columns to commissions, payouts, and affiliate_profiles tables
+"""Add missing columns to commissions, conversions, payouts, and affiliate_profiles tables
 
 Revision ID: 003
 Revises: 002
@@ -20,6 +20,9 @@ def upgrade() -> None:
     # Add missing columns to commissions table
     op.add_column('commissions', sa.Column('commission_rule', postgresql.JSONB(astext_type=sa.Text()), nullable=True, server_default='{}'))
     op.add_column('commissions', sa.Column('currency', sa.String(3), nullable=False, server_default='USD'))
+
+    # Add missing columns to conversions table
+    op.add_column('conversions', sa.Column('currency', sa.String(3), nullable=False, server_default='USD'))
 
     # Add missing columns to affiliate_profiles table
     op.add_column('affiliate_profiles', sa.Column('payment_method', sa.Enum('BANK_TRANSFER', 'PAYPAL', 'STRIPE', name='paymentmethod'), nullable=True))
@@ -61,6 +64,9 @@ def downgrade() -> None:
     op.drop_column('affiliate_profiles', 'tax_info')
     op.drop_column('affiliate_profiles', 'payment_details')
     op.drop_column('affiliate_profiles', 'payment_method')
+
+    # Reverse conversions changes
+    op.drop_column('conversions', 'currency')
 
     # Reverse commissions changes
     op.drop_column('commissions', 'currency')

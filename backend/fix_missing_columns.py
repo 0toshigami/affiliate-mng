@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Manually fix missing columns in affiliate_profiles
+Manually fix missing columns in multiple tables
 """
 import sys
 from sqlalchemy import create_engine, text
@@ -17,7 +17,10 @@ def main():
         Session = sessionmaker(bind=engine)
         db = Session()
 
-        print("\n🔧 Fixing missing columns in affiliate_profiles...\n")
+        print("\n🔧 Fixing missing columns in multiple tables...\n")
+
+        # ===== FIX AFFILIATE_PROFILES TABLE =====
+        print("=== Affiliate Profiles ===\n")
 
         # Check if paymentmethod enum exists
         result = db.execute(text("""
@@ -90,6 +93,28 @@ def main():
             print("✅ Added tax_info column")
         else:
             print("✅ tax_info column already exists")
+
+        # ===== FIX CONVERSIONS TABLE =====
+        print("\n=== Conversions ===\n")
+
+        # Check if currency column exists in conversions
+        result = db.execute(text("""
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'conversions'
+            AND column_name = 'currency'
+        """)).fetchone()
+
+        if not result:
+            print("Adding currency column to conversions...")
+            db.execute(text("""
+                ALTER TABLE conversions
+                ADD COLUMN currency VARCHAR(3) DEFAULT 'USD' NOT NULL
+            """))
+            db.commit()
+            print("✅ Added currency column to conversions")
+        else:
+            print("✅ currency column already exists in conversions")
 
         print("\n🎉 All columns fixed!")
 
