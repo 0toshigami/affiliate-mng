@@ -1,4 +1,4 @@
-"""Add missing columns to commissions and payouts tables
+"""Add missing columns to commissions, payouts, and affiliate_profiles tables
 
 Revision ID: 003
 Revises: 002
@@ -20,6 +20,11 @@ def upgrade() -> None:
     # Add missing columns to commissions table
     op.add_column('commissions', sa.Column('commission_rule', postgresql.JSONB(astext_type=sa.Text()), nullable=True, server_default='{}'))
     op.add_column('commissions', sa.Column('currency', sa.String(3), nullable=False, server_default='USD'))
+
+    # Add missing columns to affiliate_profiles table
+    op.add_column('affiliate_profiles', sa.Column('payment_method', sa.Enum('BANK_TRANSFER', 'PAYPAL', 'STRIPE', name='paymentmethod'), nullable=True))
+    op.add_column('affiliate_profiles', sa.Column('payment_details', postgresql.JSONB(astext_type=sa.Text()), nullable=True, server_default='{}'))
+    op.add_column('affiliate_profiles', sa.Column('tax_info', postgresql.JSONB(astext_type=sa.Text()), nullable=True, server_default='{}'))
 
     # Fix payouts table columns
     # Rename date columns to datetime and change names
@@ -51,6 +56,11 @@ def downgrade() -> None:
     op.alter_column('payouts', 'commission_count', new_column_name='commissions_count', type_=sa.Integer())
     op.alter_column('payouts', 'payout_period_end', new_column_name='end_date', type_=sa.Date())
     op.alter_column('payouts', 'payout_period_start', new_column_name='start_date', type_=sa.Date())
+
+    # Reverse affiliate_profiles changes
+    op.drop_column('affiliate_profiles', 'tax_info')
+    op.drop_column('affiliate_profiles', 'payment_details')
+    op.drop_column('affiliate_profiles', 'payment_method')
 
     # Reverse commissions changes
     op.drop_column('commissions', 'currency')
