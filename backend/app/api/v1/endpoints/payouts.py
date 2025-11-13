@@ -130,7 +130,7 @@ def get_payout_stats(
     # Get totals by status
     pending = query.filter(PayoutModel.status == PayoutStatus.PENDING).all()
     processing = query.filter(PayoutModel.status == PayoutStatus.PROCESSING).all()
-    paid = query.filter(PayoutModel.status == PayoutStatus.PAID).all()
+    paid = query.filter(PayoutModel.status == PayoutStatus.COMPLETED).all()
 
     stats["total_pending"] = sum(p.total_amount for p in pending)
     stats["total_processing"] = sum(p.total_amount for p in processing)
