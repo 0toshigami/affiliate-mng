@@ -3,33 +3,33 @@
  */
 
 export enum UserRole {
-  ADMIN = "admin",
-  AFFILIATE = "affiliate",
-  CUSTOMER = "customer",
+  ADMIN = "ADMIN",
+  AFFILIATE = "AFFILIATE",
+  CUSTOMER = "CUSTOMER",
 }
 
 export enum UserStatus {
-  ACTIVE = "active",
-  INACTIVE = "inactive",
-  SUSPENDED = "suspended",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  SUSPENDED = "SUSPENDED",
 }
 
 export enum ApprovalStatus {
-  PENDING = "pending",
-  APPROVED = "approved",
-  REJECTED = "rejected",
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
 }
 
 export enum ProgramType {
-  SAAS = "saas",
-  LEAD_GEN = "lead_gen",
-  CONTENT_MEDIA = "content_media",
+  SAAS = "SAAS",
+  LEAD_GEN = "LEAD_GEN",
+  CONTENT_MEDIA = "CONTENT_MEDIA",
 }
 
 export enum ProgramStatus {
-  ACTIVE = "active",
-  PAUSED = "paused",
-  ARCHIVED = "archived",
+  ACTIVE = "ACTIVE",
+  PAUSED = "PAUSED",
+  ARCHIVED = "ARCHIVED",
 }
 
 export interface User {
@@ -96,15 +96,15 @@ export interface AffiliateProgram {
 }
 
 export enum EnrollmentStatus {
-  PENDING = "pending",
-  ACTIVE = "active",
-  PAUSED = "paused",
-  TERMINATED = "terminated",
+  PENDING = "PENDING",
+  ACTIVE = "ACTIVE",
+  PAUSED = "PAUSED",
+  TERMINATED = "TERMINATED",
 }
 
 export enum ReferralLinkStatus {
-  ACTIVE = "active",
-  INACTIVE = "inactive",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
 }
 
 export interface ProgramEnrollment {
@@ -156,31 +156,31 @@ export interface ApiError {
 // Phase 3: Commission System Types
 
 export enum ConversionType {
-  SIGNUP = "signup",
-  TRIAL_START = "trial_start",
-  SUBSCRIPTION = "subscription",
-  PURCHASE = "purchase",
-  LEAD = "lead",
+  SALE = "SALE",
+  LEAD = "LEAD",
+  SIGNUP = "SIGNUP",
+  CUSTOM = "CUSTOM",
 }
 
 export enum ConversionStatus {
-  PENDING = "pending",
-  VALIDATED = "validated",
-  REJECTED = "rejected",
+  PENDING = "PENDING",
+  VALIDATED = "VALIDATED",
+  REJECTED = "REJECTED",
+  REVERSED = "REVERSED",
 }
 
 export enum CommissionStatus {
-  PENDING = "pending",
-  APPROVED = "approved",
-  REJECTED = "rejected",
-  PAID = "paid",
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  PAID = "PAID",
 }
 
 export enum PayoutStatus {
-  PENDING = "pending",
-  PROCESSING = "processing",
-  PAID = "paid",
-  CANCELLED = "cancelled",
+  PENDING = "PENDING",
+  PROCESSING = "PROCESSING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
 }
 
 export interface Conversion {
