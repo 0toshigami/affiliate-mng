@@ -197,7 +197,8 @@
                     type: 'LEAD',
                     value: 50, // Estimated lead value
                     currency: 'USD',
-                    customerId: formData.email, // Use email as customer identifier
+                    // Note: customerId is optional and expects a UUID if provided
+                    // For lead generation, email is stored in metadata instead
                     metadata: {
                         leadId: leadId,
                         formData: formData,
