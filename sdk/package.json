@@ -1,0 +1,35 @@
+{
+  "name": "@affiliate-mng/tracking-sdk",
+  "version": "1.0.0",
+  "description": "Lightweight JavaScript SDK for affiliate conversion tracking",
+  "type": "module",
+  "main": "dist/affiliate-sdk.js",
+  "module": "dist/affiliate-sdk.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "affiliate",
+    "tracking",
+    "conversion",
+    "analytics",
+    "referral"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup": "^4.9.6",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  },
+  "files": [
+    "dist"
+  ]
+}
