@@ -3,7 +3,7 @@ Conversion Management Endpoints
 """
 from typing import List, Optional
 from uuid import UUID
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Header
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -11,11 +11,12 @@ from app.api.deps import get_current_active_user, get_admin_user, get_affiliate_
 from app.core.exceptions import NotFoundError, BadRequestError, AuthorizationError
 from app.models.user import User, UserRole
 from app.models.conversion import Conversion as ConversionModel, ConversionType, ConversionStatus
-from app.models.referral import ReferralLink
+from app.models.referral import ReferralLink, ReferralLinkStatus
 from app.schemas.conversion import (
     Conversion,
     ConversionCreate,
     ConversionUpdate,
+    SDKConversionCreate,
 )
 from app.services.conversion_service import (
     create_conversion as create_conversion_service,
@@ -24,6 +25,50 @@ from app.services.conversion_service import (
 )
 
 router = APIRouter()
+
+
+@router.post("/track", response_model=Conversion)
+def track_conversion_sdk(
+    conversion_data: SDKConversionCreate,
+    db: Session = Depends(get_db),
+    x_api_key: Optional[str] = Header(None),
+):
+    """
+    Public endpoint for SDK conversion tracking
+    No authentication required - designed for embedded SDK usage
+
+    Validates referral link exists and is active before creating conversion
+    """
+    # Find referral link by code
+    link = db.query(ReferralLink).filter(
+        ReferralLink.link_code == conversion_data.referral_link_code,
+        ReferralLink.status == ReferralLinkStatus.ACTIVE
+    ).first()
+
+    if not link:
+        raise NotFoundError("Referral link not found or inactive")
+
+    # Check if link is expired
+    if link.expires_at:
+        from datetime import datetime, timezone
+        if link.expires_at < datetime.now(timezone.utc):
+            raise BadRequestError("Referral link has expired")
+
+    # Create conversion (auto-validate if conversion_value is provided)
+    auto_validate = conversion_data.conversion_value is not None and conversion_data.conversion_value > 0
+
+    conversion = create_conversion_service(
+        db=db,
+        referral_link=link,
+        conversion_type=conversion_data.conversion_type,
+        visitor_session_id=str(conversion_data.visitor_session_id),
+        conversion_value=conversion_data.conversion_value,
+        customer_id=str(conversion_data.customer_id) if conversion_data.customer_id else None,
+        conversion_metadata=conversion_data.conversion_metadata,
+        auto_validate=auto_validate,
+    )
+
+    return conversion
 
 
 @router.post("/", response_model=Conversion)

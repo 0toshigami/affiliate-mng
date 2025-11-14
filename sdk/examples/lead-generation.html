@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Generation Form - SDK Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+            font-size: 28px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        .success h2 {
+            margin-top: 0;
+            color: #155724;
+        }
+        .info {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div id="formContainer">
+            <h1>📋 Get a Free Quote</h1>
+            <p class="subtitle">Fill out the form below and we'll get back to you</p>
+
+            <div class="info">
+                <strong>Test Mode:</strong> Add <code>?ref=abc12345</code> to track leads
+            </div>
+
+            <form id="leadForm" onsubmit="submitLead(event)">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" required placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" required placeholder="john@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" placeholder="Acme Corp">
+                </div>
+
+                <div class="form-group">
+                    <label for="interest">What are you interested in? *</label>
+                    <select id="interest" required>
+                        <option value="">Select an option</option>
+                        <option value="consulting">Consulting Services</option>
+                        <option value="software">Software Solutions</option>
+                        <option value="training">Training & Development</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" placeholder="Tell us about your needs..."></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn">
+                    Submit Request
+                </button>
+            </form>
+        </div>
+
+        <div id="successContainer" class="success">
+            <h2>✅ Thank You!</h2>
+            <p>We've received your request and will contact you shortly.</p>
+            <p><strong>Reference ID:</strong> <span id="leadId"></span></p>
+        </div>
+    </div>
+
+    <!-- Load SDK -->
+    <script src="../dist/affiliate-sdk.js"></script>
+
+    <script>
+        // Initialize SDK
+        AffiliateSDK.init({
+            apiUrl: 'http://localhost:8000/api/v1',
+            debug: true,
+            attributionWindow: 30,
+        });
+
+        // Handle form submission
+        async function submitLead(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+
+            try {
+                // Get form data
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    company: document.getElementById('company').value,
+                    interest: document.getElementById('interest').value,
+                    message: document.getElementById('message').value,
+                };
+
+                // Generate lead ID
+                const leadId = 'LEAD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+                // Track lead conversion with Affiliate SDK
+                await AffiliateSDK.trackConversion({
+                    type: 'LEAD',
+                    value: 50, // Estimated lead value
+                    currency: 'USD',
+                    customerId: formData.email, // Use email as customer identifier
+                    metadata: {
+                        leadId: leadId,
+                        formData: formData,
+                        source: 'quote_form',
+                        timestamp: new Date().toISOString(),
+                        userAgent: navigator.userAgent,
+                    }
+                });
+
+                console.log('Lead tracked successfully!');
+
+                // Show success message
+                document.getElementById('leadId').textContent = leadId;
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('successContainer').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error submitting lead:', error);
+                btn.disabled = false;
+                btn.textContent = 'Try Again';
+                alert('There was an error submitting your request. Please try again.');
+            }
+        }
+
+        // Listen for SDK events
+        window.addEventListener('affiliateSDK:referral_detected', (e) => {
+            console.log('✅ Referral detected:', e.detail);
+        });
+
+        window.addEventListener('affiliateSDK:conversion_tracked', (e) => {
+            console.log('✅ Lead conversion tracked:', e.detail);
+        });
+
+        window.addEventListener('affiliateSDK:conversion_not_attributed', (e) => {
+            console.warn('⚠️ Lead not attributed to affiliate:', e.detail.reason);
+            // You might still want to save the lead in your CRM
+        });
+
+        window.addEventListener('affiliateSDK:conversion_error', (e) => {
+            console.error('❌ Error tracking conversion:', e.detail);
+        });
+    </script>
+</body>
+</html>
