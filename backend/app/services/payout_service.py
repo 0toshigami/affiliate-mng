@@ -2,7 +2,7 @@
 Payout Service - Business logic for payout management
 """
 from decimal import Decimal
-from typing import List
+from typing import List, Optional
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
