@@ -111,7 +111,7 @@ Track a conversion event.
   - `type` (required): Conversion type - `'SALE' | 'LEAD' | 'SIGNUP' | 'CUSTOM'`
   - `value` (optional): Conversion value (e.g., order total)
   - `currency` (optional): Currency code (ISO 4217, default: 'USD')
-  - `customerId` (optional): Customer identifier
+  - `customerId` (optional): Customer UUID (links to registered user). For lead generation forms without a user account, omit this field and store contact info in metadata instead.
   - `metadata` (optional): Custom metadata object
 
 **Returns:** `Promise<void>`
@@ -338,8 +338,10 @@ document.getElementById('contact-form').addEventListener('submit', async (e) => 
   await AffiliateSDK.trackConversion({
     type: 'LEAD',
     value: 50, // Estimated lead value
-    customerId: email,
+    // Note: customerId expects a UUID. For leads without user accounts,
+    // store contact info in metadata instead
     metadata: {
+      email: email,
       source: 'contact_form',
       interest: formData.get('interest')
     }
