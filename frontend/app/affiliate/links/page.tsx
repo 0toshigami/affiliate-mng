@@ -100,8 +100,8 @@ export default function ReferralLinksPage() {
   };
 
   const copyToClipboard = async (link: ReferralLink) => {
-    // Build full URL
-    const fullUrl = `${window.location.origin}/api/v1/referrals/track/${link.link_code}`;
+    // Build short referral link URL
+    const fullUrl = `${window.location.origin}/r/${link.link_code}`;
     try {
       await navigator.clipboard.writeText(fullUrl);
       setCopiedId(link.id);
