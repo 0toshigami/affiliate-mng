@@ -14,9 +14,9 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { code: string } }
+  { params }: { params: Promise<{ code: string }> }
 ) {
-  const { code } = params;
+  const { code } = await params;
 
   // Get the backend API URL from environment
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
