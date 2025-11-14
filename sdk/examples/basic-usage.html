@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate SDK - Basic Usage</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button.secondary {
+            background: #2196f3;
+        }
+        button.secondary:hover {
+            background: #0b7dda;
+        }
+        .debug-output {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .label {
+            font-weight: bold;
+            color: #555;
+            margin-top: 10px;
+            display: block;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🎯 Affiliate Conversion Tracking SDK</h1>
+        <p>This page demonstrates the basic usage of the Affiliate SDK.</p>
+
+        <div class="info">
+            <strong>💡 How to test:</strong><br>
+            1. Add <code>?ref=YOUR_LINK_CODE</code> to the URL (e.g., ?ref=abc12345)<br>
+            2. SDK will automatically detect and store the referral code<br>
+            3. Click "Track Conversion" to test conversion tracking<br>
+            4. Check the debug output below
+        </div>
+
+        <div>
+            <label class="label">Conversion Type:</label>
+            <select id="conversionType" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="SALE">Sale</option>
+                <option value="LEAD">Lead</option>
+                <option value="SIGNUP">Sign Up</option>
+                <option value="CUSTOM">Custom</option>
+            </select>
+
+            <label class="label">Conversion Value (optional):</label>
+            <input type="number" id="conversionValue" placeholder="99.99" step="0.01" min="0">
+
+            <label class="label">Customer ID (optional):</label>
+            <input type="text" id="customerId" placeholder="customer-123">
+
+            <div style="margin-top: 20px;">
+                <button onclick="trackConversion()">Track Conversion</button>
+                <button class="secondary" onclick="showSessionInfo()">Show Session Info</button>
+                <button class="secondary" onclick="clearData()">Clear Tracking Data</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📊 Debug Output</h3>
+        <div id="debugOutput" class="debug-output">
+            Initializing SDK...<br>
+        </div>
+    </div>
+
+    <!-- Load SDK -->
+    <script src="../dist/affiliate-sdk.js"></script>
+
+    <script>
+        // Debug logging
+        function log(message, data) {
+            const output = document.getElementById('debugOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            let logLine = `[${timestamp}] ${message}`;
+
+            if (data) {
+                logLine += '\n' + JSON.stringify(data, null, 2);
+            }
+
+            output.innerHTML += logLine + '<br><br>';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Initialize SDK
+        try {
+            AffiliateSDK.init({
+                apiUrl: 'http://localhost:8000/api/v1',
+                debug: true,
+                attributionWindow: 30,
+            });
+            log('✅ SDK initialized successfully');
+
+            // Show initial session info
+            showSessionInfo();
+        } catch (error) {
+            log('❌ Error initializing SDK:', error);
+        }
+
+        // Listen to SDK events
+        window.addEventListener('affiliateSDK:referral_detected', (e) => {
+            log('🔗 Referral detected!', e.detail);
+        });
+
+        window.addEventListener('affiliateSDK:conversion_tracked', (e) => {
+            log('✅ Conversion tracked successfully!', e.detail);
+        });
+
+        window.addEventListener('affiliateSDK:conversion_not_attributed', (e) => {
+            log('⚠️ Conversion not attributed:', e.detail);
+        });
+
+        window.addEventListener('affiliateSDK:conversion_error', (e) => {
+            log('❌ Conversion tracking error:', e.detail);
+        });
+
+        // Track conversion
+        async function trackConversion() {
+            try {
+                const type = document.getElementById('conversionType').value;
+                const value = document.getElementById('conversionValue').value;
+                const customerId = document.getElementById('customerId').value;
+
+                const options = {
+                    type: type,
+                };
+
+                if (value) {
+                    options.value = parseFloat(value);
+                    options.currency = 'USD';
+                }
+
+                if (customerId) {
+                    options.customerId = customerId;
+                }
+
+                // Add custom metadata
+                options.metadata = {
+                    page: window.location.pathname,
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                };
+
+                log('📤 Sending conversion...', options);
+                await AffiliateSDK.trackConversion(options);
+            } catch (error) {
+                log('❌ Error:', { message: error.message });
+            }
+        }
+
+        // Show session info
+        function showSessionInfo() {
+            try {
+                const info = AffiliateSDK.getSessionInfo();
+                log('ℹ️ Current session info:', info);
+            } catch (error) {
+                log('❌ Error getting session info:', error);
+            }
+        }
+
+        // Clear tracking data
+        function clearData() {
+            try {
+                AffiliateSDK.clear();
+                log('🗑️ All tracking data cleared');
+                showSessionInfo();
+            } catch (error) {
+                log('❌ Error clearing data:', error);
+            }
+        }
+    </script>
+</body>
+</html>

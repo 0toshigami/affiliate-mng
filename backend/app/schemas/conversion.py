@@ -31,6 +31,17 @@ class ConversionCreate(ConversionBase):
     customer_id: Optional[UUID] = None
 
 
+class SDKConversionCreate(BaseModel):
+    """Schema for SDK conversion tracking (public endpoint)"""
+    referral_link_code: str
+    visitor_session_id: UUID
+    conversion_type: ConversionType
+    conversion_value: Optional[Decimal] = Field(default=None, ge=0)
+    currency: str = Field(default="USD", max_length=3)
+    customer_id: Optional[UUID] = None
+    conversion_metadata: Optional[Dict] = Field(default_factory=dict)
+
+
 class ConversionUpdate(BaseModel):
     """Schema for updating a conversion"""
     status: Optional[ConversionStatus] = None

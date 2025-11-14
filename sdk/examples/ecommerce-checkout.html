@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Checkout - SDK Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .product {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .total {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #2196f3;
+        }
+        .price {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🛒 Checkout</h1>
+
+        <div class="info">
+            <strong>Demo Store</strong><br>
+            Add <code>?ref=abc12345</code> to URL to simulate referral tracking
+        </div>
+
+        <div class="product">
+            <div>
+                <strong>Premium Widget</strong><br>
+                <small>Qty: 2</small>
+            </div>
+            <div class="price">$49.99</div>
+        </div>
+
+        <div class="product">
+            <div>
+                <strong>Deluxe Gadget</strong><br>
+                <small>Qty: 1</small>
+            </div>
+            <div class="price">$79.99</div>
+        </div>
+
+        <div class="total">
+            <span>Total:</span>
+            <span class="price">$179.97</span>
+        </div>
+
+        <button id="checkoutBtn" onclick="processCheckout()">
+            Complete Purchase
+        </button>
+
+        <div id="successMessage" class="success">
+            ✅ Order completed successfully!<br>
+            Order #<span id="orderId"></span><br>
+            <small>Conversion tracked with affiliate system</small>
+        </div>
+    </div>
+
+    <!-- Load SDK with data attributes -->
+    <script
+        src="../dist/affiliate-sdk.js"
+        data-api-url="http://localhost:8000/api/v1"
+        data-debug="true">
+    </script>
+
+    <script>
+        // Simulate checkout process
+        async function processCheckout() {
+            const btn = document.getElementById('checkoutBtn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Generate order ID
+                const orderId = 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+                // Track conversion with Affiliate SDK
+                await AffiliateSDK.trackConversion({
+                    type: 'SALE',
+                    value: 179.97,
+                    currency: 'USD',
+                    customerId: 'customer-' + Math.random().toString(36).substr(2, 9),
+                    metadata: {
+                        orderId: orderId,
+                        items: [
+                            { name: 'Premium Widget', quantity: 2, price: 49.99 },
+                            { name: 'Deluxe Gadget', quantity: 1, price: 79.99 }
+                        ],
+                        paymentMethod: 'credit_card',
+                        timestamp: new Date().toISOString()
+                    }
+                });
+
+                // Show success message
+                document.getElementById('orderId').textContent = orderId;
+                document.getElementById('successMessage').style.display = 'block';
+                btn.textContent = '✓ Order Completed';
+
+                console.log('Conversion tracked successfully!');
+
+            } catch (error) {
+                console.error('Checkout error:', error);
+                btn.disabled = false;
+                btn.textContent = 'Try Again';
+                alert('There was an error processing your order. Please try again.');
+            }
+        }
+
+        // Listen for SDK events
+        window.addEventListener('affiliateSDK:referral_detected', (e) => {
+            console.log('Referral detected:', e.detail);
+        });
+
+        window.addEventListener('affiliateSDK:conversion_tracked', (e) => {
+            console.log('Conversion tracked:', e.detail);
+        });
+
+        window.addEventListener('affiliateSDK:conversion_not_attributed', (e) => {
+            console.log('Conversion not attributed:', e.detail.reason);
+        });
+    </script>
+</body>
+</html>

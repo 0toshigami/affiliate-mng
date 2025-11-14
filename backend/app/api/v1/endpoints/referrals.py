@@ -265,6 +265,34 @@ def get_referral_link_stats(
 
 # ===== Public Tracking Endpoint =====
 
+@router.get("/verify/{link_code}")
+async def verify_referral_link(
+    link_code: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Public endpoint to verify if a referral link exists and is active
+    No authentication required - used by SDK
+    """
+    link = db.query(ReferralLink).filter(
+        ReferralLink.link_code == link_code,
+        ReferralLink.status == ReferralLinkStatus.ACTIVE,
+    ).first()
+
+    if not link:
+        return {"valid": False, "message": "Referral link not found or inactive"}
+
+    # Check if link is expired
+    if link.expires_at and link.expires_at < datetime.utcnow():
+        return {"valid": False, "message": "Referral link has expired"}
+
+    return {
+        "valid": True,
+        "program_id": str(link.program_id),
+        "affiliate_id": str(link.affiliate_id),
+    }
+
+
 @router.get("/track/{link_code}")
 async def track_referral_click(
     link_code: str,
