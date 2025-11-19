@@ -77,9 +77,9 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./frontend/.env.local
+      - ./frontend/.env.production
     environment:
-      - API_URL=http://backend:8000  # Server-side (SSR) API URL - overrides .env.local
+      - API_URL=http://backend:8000  # Server-side (SSR) API URL - overrides .env.local      
     depends_on:
       - backend
     networks:

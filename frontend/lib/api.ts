@@ -33,13 +33,12 @@ const getApiUrl = (): string => {
   return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 };
 
-const API_URL = getApiUrl();
-const API_V1 = `${API_URL}/api/v1`;
-
 class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
+    const API_URL = getApiUrl();
+    const API_V1 = `${API_URL}/api/v1`;
     this.client = axios.create({
       baseURL: API_V1,
       headers: {
