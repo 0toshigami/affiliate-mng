@@ -67,11 +67,13 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: affiliate-mng-frontend
-    command: npm run dev
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+    # Production mode - no command override, no volume mounts
+    # For development mode, uncomment command and volumes below:
+    # command: npm run dev
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules
+    #   - /app/.next
     ports:
       - "3000:3000"
     env_file:
