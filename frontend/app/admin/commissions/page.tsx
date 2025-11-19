@@ -70,12 +70,12 @@ export default function AdminCommissionsPage() {
 
   const getStatusBadge = (status: CommissionStatus) => {
     const variants: Record<CommissionStatus, "success" | "warning" | "danger" | "default"> = {
-      pending: "warning",
-      approved: "success",
-      rejected: "danger",
-      paid: "default",
+      PENDING: "warning",
+      APPROVED: "success",
+      REJECTED: "danger",
+      PAID: "default",
     };
-    return <Badge variant={variants[status]}>{status.toUpperCase()}</Badge>;
+    return <Badge variant={variants[status]}>{status}</Badge>;
   };
 
   const formatCurrency = (amount: number) => {

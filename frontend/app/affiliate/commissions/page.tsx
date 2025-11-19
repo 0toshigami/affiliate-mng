@@ -43,16 +43,16 @@ export default function AffiliateCommissionsPage() {
 
   const getStatusBadge = (status: CommissionStatus) => {
     const variants: Record<CommissionStatus, "success" | "warning" | "danger" | "default"> = {
-      pending: "warning",
-      approved: "success",
-      rejected: "danger",
-      paid: "default",
+      PENDING: "warning",
+      APPROVED: "success",
+      REJECTED: "danger",
+      PAID: "default",
     };
     const labels: Record<CommissionStatus, string> = {
-      pending: "Pending Approval",
-      approved: "Approved",
-      rejected: "Rejected",
-      paid: "Paid",
+      PENDING: "Pending Approval",
+      APPROVED: "Approved",
+      REJECTED: "Rejected",
+      PAID: "Paid",
     };
     return <Badge variant={variants[status]}>{labels[status]}</Badge>;
   };

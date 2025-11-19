@@ -68,21 +68,21 @@ export default function AdminConversionsPage() {
   };
 
   const getStatusBadge = (status: ConversionStatus) => {
-    const variants: Record<ConversionStatus, "success" | "warning" | "danger"> = {
-      pending: "warning",
-      validated: "success",
-      rejected: "danger",
+    const variants: Record<ConversionStatus, "success" | "warning" | "danger" | "default"> = {
+      PENDING: "warning",
+      VALIDATED: "success",
+      REJECTED: "danger",
+      REVERSED: "default",
     };
-    return <Badge variant={variants[status]}>{status.toUpperCase()}</Badge>;
+    return <Badge variant={variants[status]}>{status}</Badge>;
   };
 
   const getTypeBadge = (type: ConversionType) => {
     const labels: Record<ConversionType, string> = {
-      signup: "Sign Up",
-      trial_start: "Trial Start",
-      subscription: "Subscription",
-      purchase: "Purchase",
-      lead: "Lead",
+      SALE: "Sale",
+      LEAD: "Lead",
+      SIGNUP: "Sign Up",
+      CUSTOM: "Custom",
     };
     return <Badge variant="default">{labels[type]}</Badge>;
   };

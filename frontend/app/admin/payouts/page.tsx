@@ -124,12 +124,12 @@ export default function AdminPayoutsPage() {
 
   const getStatusBadge = (status: PayoutStatus) => {
     const variants: Record<PayoutStatus, "success" | "warning" | "default" | "danger"> = {
-      pending: "warning",
-      processing: "default",
-      paid: "success",
-      cancelled: "danger",
+      PENDING: "warning",
+      PROCESSING: "default",
+      COMPLETED: "success",
+      FAILED: "danger",
     };
-    return <Badge variant={variants[status]}>{status.toUpperCase()}</Badge>;
+    return <Badge variant={variants[status]}>{status}</Badge>;
   };
 
   const formatCurrency = (amount: number) => {
@@ -231,10 +231,10 @@ export default function AdminPayoutsPage() {
         </Button>
         <Button
           size="sm"
-          variant={filterStatus === PayoutStatus.PAID ? "primary" : "ghost"}
-          onClick={() => setFilterStatus(PayoutStatus.PAID)}
+          variant={filterStatus === PayoutStatus.COMPLETED ? "primary" : "ghost"}
+          onClick={() => setFilterStatus(PayoutStatus.COMPLETED)}
         >
-          Paid
+          Completed
         </Button>
       </div>
 

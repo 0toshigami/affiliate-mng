@@ -170,7 +170,7 @@ export default function ReferralLinksPage() {
                         {link.link_code}
                       </h3>
                       <Badge
-                        variant={link.status === "active" ? "success" : "default"}
+                        variant={link.status === "ACTIVE" ? "success" : "default"}
                       >
                         {link.status}
                       </Badge>

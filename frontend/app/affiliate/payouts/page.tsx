@@ -39,16 +39,16 @@ export default function AffiliatePayoutsPage() {
 
   const getStatusBadge = (status: PayoutStatus) => {
     const variants: Record<PayoutStatus, "success" | "warning" | "default" | "danger"> = {
-      pending: "warning",
-      processing: "default",
-      paid: "success",
-      cancelled: "danger",
+      PENDING: "warning",
+      PROCESSING: "default",
+      COMPLETED: "success",
+      FAILED: "danger",
     };
     const labels: Record<PayoutStatus, string> = {
-      pending: "Pending",
-      processing: "Processing",
-      paid: "Paid",
-      cancelled: "Cancelled",
+      PENDING: "Pending",
+      PROCESSING: "Processing",
+      COMPLETED: "Completed",
+      FAILED: "Failed",
     };
     return <Badge variant={variants[status]}>{labels[status]}</Badge>;
   };
@@ -149,10 +149,10 @@ export default function AffiliatePayoutsPage() {
         </Button>
         <Button
           size="sm"
-          variant={filterStatus === PayoutStatus.PAID ? "primary" : "ghost"}
-          onClick={() => setFilterStatus(PayoutStatus.PAID)}
+          variant={filterStatus === PayoutStatus.COMPLETED ? "primary" : "ghost"}
+          onClick={() => setFilterStatus(PayoutStatus.COMPLETED)}
         >
-          Paid
+          Completed
         </Button>
       </div>
 
@@ -333,7 +333,7 @@ export default function AffiliatePayoutsPage() {
               </div>
             )}
 
-            {selectedPayout.status === PayoutStatus.PAID && (
+            {selectedPayout.status === PayoutStatus.COMPLETED && (
               <div className="bg-green-50 border border-green-200 rounded-md p-4">
                 <p className="text-sm text-green-800">
                   This payout has been completed and sent to you.
@@ -341,10 +341,10 @@ export default function AffiliatePayoutsPage() {
               </div>
             )}
 
-            {selectedPayout.status === PayoutStatus.CANCELLED && (
+            {selectedPayout.status === PayoutStatus.FAILED && (
               <div className="bg-red-50 border border-red-200 rounded-md p-4">
                 <p className="text-sm text-red-800">
-                  This payout has been cancelled. Your commissions have been returned to
+                  This payout has failed. Your commissions have been returned to
                   the approved state and will be included in future payouts.
                 </p>
               </div>

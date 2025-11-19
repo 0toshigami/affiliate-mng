@@ -88,11 +88,11 @@ export default function ProgramsPage() {
 
   const getStatusBadge = (status: ProgramStatus) => {
     const variants: Record<ProgramStatus, "success" | "warning" | "default"> = {
-      active: "success",
-      paused: "warning",
-      archived: "default",
+      ACTIVE: "success",
+      PAUSED: "warning",
+      ARCHIVED: "default",
     };
-    return <Badge variant={variants[status]}>{status.toUpperCase()}</Badge>;
+    return <Badge variant={variants[status]}>{status}</Badge>;
   };
 
   if (isLoading) {

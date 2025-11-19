@@ -85,14 +85,14 @@ export default function AffiliateProfilePage() {
 
   const getStatusBadge = (status: ApprovalStatus) => {
     const variants: Record<ApprovalStatus, "success" | "warning" | "danger"> = {
-      approved: "success",
-      pending: "warning",
-      rejected: "danger",
+      APPROVED: "success",
+      PENDING: "warning",
+      REJECTED: "danger",
     };
     const labels: Record<ApprovalStatus, string> = {
-      approved: "Approved",
-      pending: "Pending Approval",
-      rejected: "Rejected",
+      APPROVED: "Approved",
+      PENDING: "Pending Approval",
+      REJECTED: "Rejected",
     };
     return <Badge variant={variants[status]}>{labels[status]}</Badge>;
   };

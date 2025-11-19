@@ -349,7 +349,7 @@ export default function AffiliateDashboard() {
                         <p className="font-medium text-sm font-mono">{link.link_code}</p>
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            link.status === "active"
+                            link.status === "ACTIVE"
                               ? "bg-green-100 text-green-800"
                               : "bg-gray-100 text-gray-800"
                           }`}

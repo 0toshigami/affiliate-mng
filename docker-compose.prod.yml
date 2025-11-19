@@ -8,6 +8,7 @@ services:
   postgres:
     # Remove port exposure for security
     ports: []
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -25,6 +26,7 @@ services:
   redis:
     # Remove port exposure for security
     ports: []
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -40,11 +42,12 @@ services:
         max-file: "3"
 
   backend:
-    # Use production command (no --reload)
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+    # Production command now in Dockerfile, but can override if needed
+    # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
     # Don't mount source code in production
     volumes:
       - ./sdk/dist:/app/sdk_files:ro
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -58,6 +61,7 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    # Health check now in Dockerfile, but keeping here for docker-compose visibility
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -66,12 +70,10 @@ services:
       start_period: 40s
 
   frontend:
-    # Use production build
-    command: npm run start
-    # Don't mount source code in production
-    volumes:
-      - /app/node_modules
-      - /app/.next
+    # Production command now in Dockerfile (standalone mode uses node server.js)
+    # Don't mount source code in production - standalone build is self-contained
+    volumes: []
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -85,8 +87,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    # Health check now in Dockerfile, but keeping here for docker-compose visibility
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3

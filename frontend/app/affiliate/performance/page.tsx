@@ -272,7 +272,7 @@ export default function AffiliatePerformancePage() {
                           <p className="font-medium text-sm font-mono">{link.link_code}</p>
                         </div>
                         <Badge
-                          variant={link.status === "active" ? "success" : "default"}
+                          variant={link.status === "ACTIVE" ? "success" : "default"}
                         >
                           {link.status}
                         </Badge>
@@ -462,7 +462,7 @@ export default function AffiliatePerformancePage() {
                   <div>
                     <p className="text-gray-600">Active Links</p>
                     <p className="font-semibold">
-                      {links.filter((l) => l.status === "active").length}
+                      {links.filter((l) => l.status === "ACTIVE").length}
                     </p>
                   </div>
                   <div>
