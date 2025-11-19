@@ -1,5 +1,9 @@
 version: '3.8'
 
+# Development Docker Compose Configuration
+# For production deployment, use: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# This will apply production overrides (no port exposure for DB/Redis, resource limits, health checks, etc.)
+
 services:
   postgres:
     image: postgres:15-alpine
@@ -37,46 +41,47 @@ services:
     networks:
       - affiliate-network
 
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   container_name: affiliate-mng-backend
-  #   command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-  #   volumes:
-  #     - ./backend:/app
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/affiliate_mng
-  #     - REDIS_URL=redis://redis:6379/0
-  #     - SECRET_KEY=dev-secret-key-change-in-production
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #   networks:
-  #     - affiliate-network
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: affiliate-mng-backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app
+      - ./sdk/dist:/app/sdk_files:ro  # Mount SDK files as read-only
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - affiliate-network
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   container_name: affiliate-mng-frontend
-  #   command: npm run dev
-  #   volumes:
-  #     - ./frontend:/app
-  #     - /app/node_modules
-  #     - /app/.next
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     - NEXT_PUBLIC_API_URL=http://localhost:8000
-  #   depends_on:
-  #     - backend
-  #   networks:
-  #     - affiliate-network
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: affiliate-mng-frontend
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env.local
+    environment:
+      - API_URL=http://backend:8000  # Server-side (SSR) API URL - overrides .env.local
+    depends_on:
+      - backend
+    networks:
+      - affiliate-network
 
 volumes:
   postgres_data:

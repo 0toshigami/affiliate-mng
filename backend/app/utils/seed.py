@@ -110,8 +110,8 @@ def seed_admin_user(db: Session) -> None:
             hashed_password=get_password_hash(settings.FIRST_SUPERUSER_PASSWORD),
             first_name="Admin",
             last_name="User",
-            role="admin",  # Use string directly instead of enum
-            status="active",  # Use string directly instead of enum
+            role="ADMIN",  # Use uppercase to match database enum
+            status="ACTIVE",  # Use uppercase to match database enum
         )
         db.add(admin)
         db.commit()

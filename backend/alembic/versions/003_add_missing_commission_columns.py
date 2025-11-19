@@ -27,7 +27,12 @@ def upgrade() -> None:
     op.create_index('idx_conversion_converted_at', 'conversions', ['converted_at'])
 
     # Add missing columns to affiliate_profiles table
-    op.add_column('affiliate_profiles', sa.Column('payment_method', sa.Enum('BANK_TRANSFER', 'PAYPAL', 'STRIPE', name='paymentmethod'), nullable=True))
+    # Create the payment method enum type first
+    payment_method_enum = sa.Enum('BANK_TRANSFER', 'PAYPAL', 'STRIPE', name='paymentmethod')
+    payment_method_enum.create(op.get_bind(), checkfirst=True)
+
+    # Now add the column using the enum type
+    op.add_column('affiliate_profiles', sa.Column('payment_method', payment_method_enum, nullable=True))
     op.add_column('affiliate_profiles', sa.Column('payment_details', postgresql.JSONB(astext_type=sa.Text()), nullable=True, server_default='{}'))
     op.add_column('affiliate_profiles', sa.Column('tax_info', postgresql.JSONB(astext_type=sa.Text()), nullable=True, server_default='{}'))
 
@@ -74,6 +79,10 @@ def downgrade() -> None:
     op.drop_column('affiliate_profiles', 'tax_info')
     op.drop_column('affiliate_profiles', 'payment_details')
     op.drop_column('affiliate_profiles', 'payment_method')
+
+    # Drop the payment method enum type
+    payment_method_enum = sa.Enum('BANK_TRANSFER', 'PAYPAL', 'STRIPE', name='paymentmethod')
+    payment_method_enum.drop(op.get_bind(), checkfirst=True)
 
     # Reverse conversions changes
     op.drop_index('idx_conversion_converted_at', 'conversions')

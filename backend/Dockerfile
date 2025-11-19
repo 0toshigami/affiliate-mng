@@ -15,6 +15,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Create SDK files directory (will be populated via volume mount in docker-compose)
+RUN mkdir -p ./sdk_files
+
 # Expose port
 EXPOSE 8000
 

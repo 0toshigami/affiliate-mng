@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDK Integration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Affiliate SDK Integration Test</h1>
+
+        <div class="info status">
+            <strong>Note:</strong> This page tests the SDK integration. Make sure your backend is running at <code id="apiUrl">http://localhost:8000</code>
+        </div>
+
+        <div id="sdkStatus" class="status"></div>
+
+        <h2>Configuration</h2>
+        <div class="input-group">
+            <label for="apiUrlInput">API URL:</label>
+            <input type="text" id="apiUrlInput" value="http://localhost:8000" placeholder="http://localhost:8000">
+        </div>
+
+        <button onclick="initSDK()">Initialize SDK</button>
+        <button onclick="checkSession()">Check Session</button>
+
+        <h2>Test Conversion Tracking</h2>
+        <div class="input-group">
+            <label for="conversionValue">Conversion Value ($):</label>
+            <input type="number" id="conversionValue" value="99.99" placeholder="99.99">
+        </div>
+
+        <button onclick="trackSale()">Track Sale</button>
+        <button onclick="trackSignup()">Track Signup</button>
+        <button onclick="trackLead()">Track Lead</button>
+
+        <h2>Session Info</h2>
+        <pre id="sessionInfo">Not initialized</pre>
+
+        <h2>Console Log</h2>
+        <pre id="consoleLog"></pre>
+    </div>
+
+    <!-- Load SDK from backend -->
+    <script src="http://localhost:8000/sdk/affiliate-sdk.min.js"></script>
+
+    <script>
+        const log = document.getElementById('consoleLog');
+        const sessionInfo = document.getElementById('sessionInfo');
+        const sdkStatus = document.getElementById('sdkStatus');
+
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            log.textContent += `[${timestamp}] ${message}\n`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Check if SDK loaded
+        window.addEventListener('load', () => {
+            if (typeof AffiliateSDK !== 'undefined') {
+                sdkStatus.className = 'status success';
+                sdkStatus.innerHTML = '<strong>✓ SDK Loaded Successfully!</strong> The affiliate tracking SDK is available.';
+                addLog('SDK loaded successfully', 'success');
+            } else {
+                sdkStatus.className = 'status error';
+                sdkStatus.innerHTML = '<strong>✗ SDK Failed to Load</strong> Make sure the backend is running and serving SDK files at /sdk/affiliate-sdk.min.js';
+                addLog('SDK failed to load - check backend', 'error');
+            }
+        });
+
+        // Listen to SDK events
+        window.addEventListener('affiliateSDK:referral_detected', (e) => {
+            addLog(`Referral detected: ${e.detail.referralCode}`, 'success');
+        });
+
+        window.addEventListener('affiliateSDK:conversion_tracked', (e) => {
+            addLog(`Conversion tracked: ${JSON.stringify(e.detail)}`, 'success');
+        });
+
+        window.addEventListener('affiliateSDK:conversion_error', (e) => {
+            addLog(`Conversion error: ${e.detail.error}`, 'error');
+        });
+
+        window.addEventListener('affiliateSDK:conversion_not_attributed', (e) => {
+            addLog(`Conversion not attributed: ${e.detail.reason}`, 'info');
+        });
+
+        function initSDK() {
+            const apiUrl = document.getElementById('apiUrlInput').value;
+
+            try {
+                AffiliateSDK.init({
+                    apiUrl: apiUrl + '/api/v1',
+                    debug: true
+                });
+                addLog(`SDK initialized with API URL: ${apiUrl}`, 'success');
+                checkSession();
+            } catch (error) {
+                addLog(`SDK initialization error: ${error.message}`, 'error');
+            }
+        }
+
+        function checkSession() {
+            try {
+                const session = AffiliateSDK.getSessionInfo();
+                sessionInfo.textContent = JSON.stringify(session, null, 2);
+                addLog('Session info retrieved', 'info');
+            } catch (error) {
+                addLog(`Session error: ${error.message}`, 'error');
+            }
+        }
+
+        async function trackSale() {
+            const value = parseFloat(document.getElementById('conversionValue').value) || 99.99;
+
+            try {
+                addLog(`Tracking sale conversion: $${value}`, 'info');
+                await AffiliateSDK.trackConversion({
+                    type: 'SALE',
+                    value: value,
+                    currency: 'USD',
+                    metadata: {
+                        orderId: 'TEST-' + Date.now(),
+                        testMode: true
+                    }
+                });
+                addLog('Sale conversion tracked successfully', 'success');
+            } catch (error) {
+                addLog(`Sale tracking error: ${error.message}`, 'error');
+            }
+        }
+
+        async function trackSignup() {
+            try {
+                addLog('Tracking signup conversion', 'info');
+                await AffiliateSDK.trackConversion({
+                    type: 'SIGNUP',
+                    metadata: {
+                        testMode: true,
+                        timestamp: new Date().toISOString()
+                    }
+                });
+                addLog('Signup conversion tracked successfully', 'success');
+            } catch (error) {
+                addLog(`Signup tracking error: ${error.message}`, 'error');
+            }
+        }
+
+        async function trackLead() {
+            try {
+                addLog('Tracking lead conversion', 'info');
+                await AffiliateSDK.trackConversion({
+                    type: 'LEAD',
+                    value: 50,
+                    metadata: {
+                        email: 'test@example.com',
+                        testMode: true
+                    }
+                });
+                addLog('Lead conversion tracked successfully', 'success');
+            } catch (error) {
+                addLog(`Lead tracking error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-initialize on page load if SDK is available
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (typeof AffiliateSDK !== 'undefined') {
+                    initSDK();
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

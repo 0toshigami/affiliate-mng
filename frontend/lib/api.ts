@@ -23,7 +23,17 @@ import {
   PayoutStats,
 } from "@/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Determine the correct API URL based on context (server vs browser)
+const getApiUrl = (): string => {
+  // Server-side: use internal Docker network URL
+  if (typeof window === "undefined") {
+    return process.env.API_URL || "http://backend:8000";
+  }
+  // Client-side: use public URL accessible from browser
+  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+};
+
+const API_URL = getApiUrl();
 const API_V1 = `${API_URL}/api/v1`;
 
 class ApiClient {
